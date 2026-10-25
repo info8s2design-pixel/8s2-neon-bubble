@@ -1,5 +1,5 @@
 const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id),keys={};
-let mode='ready',level=1,score=0,lives=3,time=90,balls=[],shots=[],sparks=[],player={x:500},cool=0,inv=0,last=0;
+let mode='ready',level=1,score=0,lives=5,time=90,balls=[],shots=[],sparks=[],player={x:500},cool=0,inv=0,last=0;
 let bestScore=0;try{bestScore=Math.max(0,Number(localStorage.getItem('8s2-neon-bubble-best'))||0)}catch{}
 function saveBest(){if(score>bestScore){bestScore=score;try{localStorage.setItem('8s2-neon-bubble-best',String(bestScore))}catch{}}}
 const weapons={normal:{name:'Arpione classico',icon:'↑',color:'#55fff1'},double:{name:'Doppio arpione',icon:'⇈',color:'#ff50ce'},sticky:{name:'Arpione adesivo',icon:'↥',color:'#deff35'},rapid:{name:'Colpi rapidi',icon:'ϟ',color:'#ffb547'}};
@@ -27,7 +27,7 @@ function load(){bars=makeBars(level);$('world').textContent='LIVELLO '+String(le
 const hudValues={};function hudText(id,value){if(hudValues[id]!==value){$(id).textContent=value;hudValues[id]=value}}
 function hud(){saveBest();hudText('best',String(bestScore).padStart(5,'0'));hudText('weapon',weapons[weapon].icon+' '+weapons[weapon].name+(weaponTime>0?' · '+Math.ceil(weaponTime)+'s':'')+(shieldTime>0?'  |  ◇ Invincibile '+Math.ceil(shieldTime)+'s':'')+(slowTime>0?'  |  ⌛ Bolle lente '+Math.ceil(slowTime)+'s':''));if(hudValues.weaponColor!==weapons[weapon].color){$('weapon').style.color=weapons[weapon].color;hudValues.weaponColor=weapons[weapon].color}hudText('level',String(level).padStart(2,'0'));hudText('score',String(score).padStart(5,'0'));hudText('time',Math.ceil(time));hudText('lives','♥ '.repeat(lives).trim())}
 function overlay(title,message,label){$('title').textContent=title;$('message').textContent=message;$('start').textContent=label;$('overlay').classList.remove('hidden')}
-function start(){if(typeof stopLevelWin==='function')stopLevelWin();if(mode==='paused'){mode='playing'}else if(mode==='between'){level++;load();mode='playing'}else{level=1;score=0;lives=3;load();mode='playing'}$('overlay').classList.add('hidden')}
+function start(){if(typeof stopLevelWin==='function')stopLevelWin();if(mode==='paused'){mode='playing'}else if(mode==='between'){level++;load();mode='playing'}else{level=1;score=0;lives=5;load();mode='playing'}$('overlay').classList.add('hidden')}
 $('start').onclick=start;
 function pause(){if(mode==='playing'){mode='paused';overlay('Un piccolo respiro.','Il mondo neon ti aspetta. Riprendi quando vuoi.','Riprendi →')}else if(mode==='paused')start()}
 $('pause').onclick=pause;
