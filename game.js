@@ -1,5 +1,7 @@
 const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id),keys={};
 let mode='ready',level=1,score=0,lives=3,time=90,balls=[],shots=[],sparks=[],player={x:500},cool=0,inv=0,last=0;
+let bestScore=0;try{bestScore=Math.max(0,Number(localStorage.getItem('8s2-neon-bubble-best'))||0)}catch{}
+function saveBest(){if(score>bestScore){bestScore=score;try{localStorage.setItem('8s2-neon-bubble-best',String(bestScore))}catch{}}}
 const weapons={normal:{name:'Arpione classico',icon:'↑',color:'#55fff1'},double:{name:'Doppio arpione',icon:'⇈',color:'#ff50ce'},sticky:{name:'Arpione adesivo',icon:'↥',color:'#deff35'},rapid:{name:'Colpi rapidi',icon:'ϟ',color:'#ffb547'}};
 let drops=[],weapon='normal',weaponTime=0,dropCooldown=0,popsWithoutDrop=0;
 function resetWeapon(){weapon='normal';weaponTime=0}
@@ -9,7 +11,7 @@ const floor=635,radii=[13,24,43,65],colors=['#dcff32','#39fff0','#ff3dbe','#a86a
 function ball(x,y,size,dir){return{x,y,size,r:radii[size],vx:dir*(125+25*(3-size)),vy:-250}}
 function load(){$('world').textContent='LIVELLO '+String(level).padStart(2,'0')+' · '+worldName();drops=[];resetWeapon();dropCooldown=0;popsWithoutDrop=0;balls=[];for(let i=0;i<Math.min(2+Math.floor((level-1)/2),5);i++)balls.push(ball(170+i*150,100-(i%2)*40,Math.min(3,1+Math.ceil(level/2)),i%2?1:-1));shots=[];player.x=500;time=90;inv=2;cool=0;hud()}
 const hudValues={};function hudText(id,value){if(hudValues[id]!==value){$(id).textContent=value;hudValues[id]=value}}
-function hud(){hudText('weapon',weapons[weapon].icon+' '+weapons[weapon].name+(weaponTime>0?' · '+Math.ceil(weaponTime)+'s':''));if(hudValues.weaponColor!==weapons[weapon].color){$('weapon').style.color=weapons[weapon].color;hudValues.weaponColor=weapons[weapon].color}hudText('level',String(level).padStart(2,'0'));hudText('score',String(score).padStart(5,'0'));hudText('time',Math.ceil(time));hudText('lives','♥ '.repeat(lives).trim())}
+function hud(){saveBest();hudText('best',String(bestScore).padStart(5,'0'));hudText('weapon',weapons[weapon].icon+' '+weapons[weapon].name+(weaponTime>0?' · '+Math.ceil(weaponTime)+'s':''));if(hudValues.weaponColor!==weapons[weapon].color){$('weapon').style.color=weapons[weapon].color;hudValues.weaponColor=weapons[weapon].color}hudText('level',String(level).padStart(2,'0'));hudText('score',String(score).padStart(5,'0'));hudText('time',Math.ceil(time));hudText('lives','♥ '.repeat(lives).trim())}
 function overlay(title,message,label){$('title').textContent=title;$('message').textContent=message;$('start').textContent=label;$('overlay').classList.remove('hidden')}
 function start(){if(mode==='paused'){mode='playing'}else if(mode==='between'){level++;load();mode='playing'}else{level=1;score=0;lives=3;load();mode='playing'}$('overlay').classList.add('hidden')}
 $('start').onclick=start;
