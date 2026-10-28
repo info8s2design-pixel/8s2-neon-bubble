@@ -1,7 +1,8 @@
 const splash=document.getElementById('splash'),gameShell=document.getElementById('game-shell');
-function enterGame(){if(splash.hidden)return;const intro=document.getElementById('intro-audio');if(intro){intro.pause();intro.currentTime=0}splash.hidden=true;gameShell.hidden=false;mode='ready';for(const key in keys)keys[key]=false;overlay('Pronto a giocare?','Muoviti, schiva le bolle e raccogli le armi. Premi START per iniziare.','START');document.getElementById('start').focus({preventScroll:true});window.scrollTo(0,0);if(typeof fitFullscreenOrientation==='function')fitFullscreenOrientation()}
+function enterGame(){if(splash.hidden)return;if(window.NeonProfiles&&!window.NeonProfiles.ensure())return;const intro=document.getElementById('intro-audio');if(intro){intro.pause();intro.currentTime=0}splash.hidden=true;gameShell.hidden=false;mode='ready';level=1;score=0;lives=5;load();for(const key in keys)keys[key]=false;overlay('Pronto a giocare?','Muoviti, schiva le bolle e raccogli le armi. Premi START per iniziare.','START');document.getElementById('start').focus({preventScroll:true});window.scrollTo(0,0);if(typeof fitFullscreenOrientation==='function')fitFullscreenOrientation()}
 document.getElementById('enter-game').onclick=enterGame;
 function returnToMenu(){
+ if(window.NeonProfiles)window.NeonProfiles.finish(score,level);
  mode='ready';
  for(const key in keys)keys[key]=false;
  if(typeof stopLevelWin==='function')stopLevelWin();
@@ -15,5 +16,6 @@ function returnToMenu(){
  document.getElementById('enter-game').focus({preventScroll:true});
 }
 document.getElementById('return-menu').addEventListener('click',returnToMenu);
+
 
 
