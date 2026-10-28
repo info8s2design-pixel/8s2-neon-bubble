@@ -9,9 +9,11 @@ function returnToMenu(){
  if(typeof popPools!=='undefined')for(const pool of Object.values(popPools))for(const voice of pool){voice.audio.pause();voice.audio.currentTime=0}
  if(typeof syncMusic==='function')syncMusic();
  gameShell.hidden=true;splash.hidden=false;
+ if(typeof syncHomeMusic==='function')syncHomeMusic();
  if(typeof leaveFullscreen==='function')leaveFullscreen();
  window.scrollTo(0,0);
  document.getElementById('enter-game').focus({preventScroll:true});
 }
 document.getElementById('return-menu').addEventListener('click',returnToMenu);
+
 
