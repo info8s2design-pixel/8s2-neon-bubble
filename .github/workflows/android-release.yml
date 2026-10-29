@@ -53,33 +53,25 @@ jobs:
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           test -n "$KEYSTORE_B64" || (echo "Configure ANDROID_KEYSTORE_BASE64" && exit 1)
           test -n "$KEYSTORE_PASSWORD" || (echo "Configure ANDROID_KEYSTORE_PASSWORD" && exit 1)
-          test -n "$KEY_ALIAS" || (echo "Configure ANDROID_KEY_ALIAS" && exit 1)
-          test -n "$KEY_PASSWORD" || (echo "Configure ANDROID_KEY_PASSWORD" && exit 1)
       - name: Restore keystore and configure release signing
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           printf '%s' "$KEYSTORE_B64" | base64 --decode > android-build/android/app/8s2-release.jks
           node - <<'NODE'
           const fs=require('fs');
           const p='android-build/android/app/build.gradle';
           let s=fs.readFileSync(p,'utf8');
-          s += `\nandroid {\n defaultConfig {\n  versionCode 100000 + Integer.parseInt(System.getenv('GITHUB_RUN_NUMBER') ?: '1')\n  versionName '1.23'\n }\n signingConfigs {\n  release {\n   storeFile file('8s2-release.jks')\n   storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')\n   keyAlias System.getenv('ANDROID_KEY_ALIAS')\n   keyPassword System.getenv('ANDROID_KEY_PASSWORD')\n  }\n }\n buildTypes {\n  release { signingConfig signingConfigs.release }\n }\n}\n`;
+          s += `\nandroid {\n defaultConfig {\n  versionCode 100000 + Integer.parseInt(System.getenv('GITHUB_RUN_NUMBER') ?: '1')\n  versionName '1.23'\n }\n signingConfigs {\n  release {\n   storeFile file('8s2-release.jks')\n   storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')\n   keyAlias '8s2worldsoccer'\n   keyPassword System.getenv('ANDROID_KEYSTORE_PASSWORD')\n  }\n }\n buildTypes {\n  release { signingConfig signingConfigs.release }\n }\n}\n`;
           fs.writeFileSync(p,s);
           NODE
       - name: Build signed release APK
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: cd android-build/android && chmod +x gradlew && ./gradlew assembleRelease --no-daemon
       - uses: actions/upload-artifact@v4
         with:
