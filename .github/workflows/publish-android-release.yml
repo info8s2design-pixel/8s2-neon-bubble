@@ -1,0 +1,22 @@
+name: Publish Android GitHub Release
+on:
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download verified signed APK from successful build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 40857783428 --repo "${{ github.repository }}" --name "8s2-neon-bubble-android-signed-release" --dir release-files
+          test -s release-files/app-release.apk
+          mv release-files/app-release.apk release-files/8s2-neon-bubble-android.apk
+      - name: Publish official GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "android-v1.23" "release-files/8s2-neon-bubble-android.apk" --repo "${{ github.repository }}" --title "8S2 Neon Bubble Android v1.23" --notes "APK Android ufficiale firmato, utilizzabile offline. Scarica il file APK e installalo su Android. Questa release usa la chiave di firma permanente 8S2 Design." --latest
