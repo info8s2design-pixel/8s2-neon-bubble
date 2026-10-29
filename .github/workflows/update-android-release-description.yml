@@ -12,22 +12,22 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           cat > /tmp/release-notes.md <<'RELEASE_NOTES'
-# 8S2 Neon Bubble — Android
-
-**Le bolle incontrano il mondo degli arcade al neon!**
-
-Un gioco arcade rétro tra colori luminosi, sfide e atmosfera da sala giochi.
-
-## Caratteristiche
-- Grafica rétro con effetti neon
-- Comandi touch per smartphone e tablet
-- Giocatori e record
-- Musica ed effetti sonori arcade
-- Giocabile offline, senza connessione Internet
-
-## Installazione Android
-Scarica il file APK dalla sezione **Assets** qui sotto e installalo sul dispositivo Android. Se Android richiede un'autorizzazione per installare app da questa fonte, concedila soltanto se ti fidi del file scaricato da questa release ufficiale.
-
-**Sviluppato da 8S2 Design.**
-RELEASE_NOTES
+          # 8S2 Neon Bubble — Android
+          
+          **Le bolle incontrano il mondo degli arcade al neon!**
+          
+          Un gioco arcade rétro tra colori luminosi, sfide e atmosfera da sala giochi.
+          
+          ## Caratteristiche
+          - Grafica rétro con effetti neon
+          - Comandi touch per smartphone e tablet
+          - Giocatori e record
+          - Musica ed effetti sonori arcade
+          - Giocabile offline, senza connessione Internet
+          
+          ## Installazione Android
+          Scarica il file APK dalla sezione **Assets** qui sotto e installalo sul dispositivo Android.
+          
+          **Sviluppato da 8S2 Design.**
+          RELEASE_NOTES
           gh release edit "android-v1.23" --repo "${{ github.repository }}" --notes-file /tmp/release-notes.md
